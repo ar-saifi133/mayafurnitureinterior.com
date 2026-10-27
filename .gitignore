@@ -1,0 +1,26 @@
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Large Archives and Backups
+*.zip
+*.rar
+*.tar.gz
+*.7z
+assets/hamza.zip
+
+# Server and PHP logs
+*.log
+error_log
+php_error.log
