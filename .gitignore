@@ -14,11 +14,9 @@ Thumbs.db
 *.sublime-workspace
 
 # Large Archives and Backups
-*.zip
 *.rar
 *.tar.gz
 *.7z
-assets/hamza.zip
 
 # Server and PHP logs
 *.log
