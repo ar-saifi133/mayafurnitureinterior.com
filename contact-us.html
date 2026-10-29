@@ -20,7 +20,6 @@
         rel="stylesheet">
     <!-- CSS Template -->
     <link href="css/style.css" rel="stylesheet">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -181,7 +180,7 @@
                         </div>
                         <div class="row justify-content-center">
                             <div class="col-lg-10">
-                                <form id="maya-contact-form" method="post" action="contact.php">
+                                <form id="maya-contact-form" method="post" action="/api/contact">
                                     <div class="row gy-4">
                                         <div class="col-md-6"><label class="form-label" for="contact-name">Full name
                                                 *</label> <input id="contact-name" type="text" name="name"
@@ -206,11 +205,6 @@
                                                 help you?</label> <textarea class="form-control" id="contact-message"
                                                 name="message" rows="5"
                                                 placeholder="Hi there, I would like to ..."></textarea></div>
-
-                                        <div class="col-12">
-                                            <div class="g-recaptcha"
-                                                data-sitekey="6Lc2tNssAAAAALlO0Tii7Yn9c5vTooM32uxF1f5B"></div>
-                                        </div>
 
                                         <div class="col-12"><button class="btn btn-primary" type="submit"
                                                 name="send">Get Started</button>
@@ -377,7 +371,6 @@
                 var globalOutput = $('#form-output-global');
                 var name = $('#contact-name').val().trim();
                 var phone = $('#contact-phone').val().trim();
-                var captcha = grecaptcha.getResponse();
 
                 // Reset messages
                 $('.maya-error').hide();
@@ -396,15 +389,10 @@
 
                 if (hasError) return;
 
-                if (captcha === "") {
-                    globalOutput.text('Please complete the reCAPTCHA.').css({ 'color': 'red', 'display': 'block' });
-                    return;
-                }
-
                 submitBtn.prop('disabled', true).text('Sending...');
 
                 $.ajax({
-                    url: 'contact.php',
+                    url: '/api/contact',
                     type: 'POST',
                     data: form.serialize(),
                     dataType: 'json',
@@ -413,22 +401,20 @@
                         if (res.status === 'success') {
                             globalOutput.text(res.message).css({ 'color': 'green', 'display': 'block' });
                             form[0].reset();
-                            grecaptcha.reset();
                         } else {
-                            globalOutput.text(res.message).css({ 'color': 'red', 'display': 'block' });
+                            globalOutput.text(res.message || 'An error occurred.').css({ 'color': 'red', 'display': 'block' });
                         }
                     },
                     error: function (xhr, status, error) {
                         submitBtn.prop('disabled', false).text('Get Started');
-                        var errorMsg = 'An error occurred. ';
-                        if (xhr.status === 0) errorMsg += 'Network error or CORS issue.';
-                        else if (xhr.status == 404) errorMsg += 'contact.php not found.';
+                        var errorMsg = 'An error occurred while sending your message. ';
+                        if (xhr.status === 0) errorMsg += 'Network error.';
+                        else if (xhr.status == 404) errorMsg += 'API endpoint not found.';
                         else if (xhr.status == 500) errorMsg += 'Server error (500).';
-                        else errorMsg += 'Status: ' + xhr.status + ' ' + error;
+                        else errorMsg += 'Status: ' + xhr.status;
 
-                        console.log("XHR Status:", xhr.status);
-                        console.log("XHR Response:", xhr.responseText);
-                        globalOutput.text(errorMsg + " (Check console for details)").css({ 'color': 'red', 'display': 'block' });
+                        console.error("Submission Error:", xhr.status, xhr.responseText);
+                        globalOutput.text(errorMsg).css({ 'color': 'red', 'display': 'block' });
                     }
                 });
             });

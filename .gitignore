@@ -22,3 +22,13 @@ Thumbs.db
 *.log
 error_log
 php_error.log
+
+# Node & Vercel
+node_modules/
+.vercel/
+
+# Environment Secrets
+.env
+.env*.local
+.env.production
+.env.development

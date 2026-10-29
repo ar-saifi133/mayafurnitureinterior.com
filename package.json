@@ -1,0 +1,13 @@
+{
+  "name": "mayafurnitureinterior",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Maya Furniture & Interior website and serverless API",
+  "scripts": {
+    "dev": "node dev-server.js",
+    "start": "node dev-server.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  }
+}
